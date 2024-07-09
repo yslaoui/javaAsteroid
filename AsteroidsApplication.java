@@ -20,18 +20,14 @@ public class AsteroidsApplication extends Application {
         Pane pane = new Pane();
         pane.setPrefSize(600,400);
         Ship ship = new Ship(200,200);
-//        Polygon ship = new Polygon(-5,-5,10,0,-5,5);
-//        ship.setTranslateX(200);
-//        ship.setTranslateY(200);
-//
-
+        Asteroid asteroid = new Asteroid(100,100);
         Scene scene = new Scene(pane);
+        pane.getChildren().addAll(ship.getCharacter(), asteroid.getCharacter());
         // map of keyboard key statuses
         Map<KeyCode, Boolean> keyBoard = new HashMap<>();
         scene.setOnKeyPressed(event->keyBoard.put(event.getCode(), true));
         scene.setOnKeyReleased(event->keyBoard.put(event.getCode(), false));
-        pane.getChildren().add(ship.getCharacter());
-        Point2D movement = new Point2D(0,1);
+
         // animation timer that rotates the ship based on the keyboard status hashmap
         new AnimationTimer() {
             @Override
@@ -46,10 +42,14 @@ public class AsteroidsApplication extends Application {
                     ship.accelerate();
                 }
                 ship.move();
+                asteroid.move();
 
             }
         }.start();
-
+        asteroid.turnRight();
+        asteroid.turnRight();
+        asteroid.accelerate();
+        asteroid.accelerate();
         window.setScene(scene);
         window.show();
     }
