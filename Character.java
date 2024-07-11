@@ -2,6 +2,7 @@ package asteroid;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 
 public class Character {
     private Polygon character;
@@ -38,6 +39,13 @@ public class Character {
     public void move() {
         this.character.setTranslateX(this.character.getTranslateX() + this.movement.getX());
         this.character.setTranslateY(this.character.getTranslateY() + this.movement.getY());
+    }
 
+    public boolean collide(Character other) {
+        Shape intersection = Shape.intersect(this.character, other.getCharacter());
+        if (intersection.getBoundsInLocal().getWidth() == -1) {
+            return false;
+        }
+        return true;
     }
 }

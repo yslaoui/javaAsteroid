@@ -43,7 +43,9 @@ public class AsteroidsApplication extends Application {
                 }
                 ship.move();
                 asteroid.move();
-
+                if (asteroid.collide(ship)) {
+                    stop();
+                }
             }
         }.start();
         asteroid.turnRight();
@@ -57,8 +59,5 @@ public class AsteroidsApplication extends Application {
     public static void main(String[] args) {
         launch(AsteroidsApplication.class);
     }
-
 }
-
-
 
