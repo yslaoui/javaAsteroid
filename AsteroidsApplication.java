@@ -10,8 +10,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class AsteroidsApplication extends Application {
 
@@ -21,8 +20,17 @@ public class AsteroidsApplication extends Application {
         pane.setPrefSize(600,400);
         Ship ship = new Ship(200,200);
         Asteroid asteroid = new Asteroid(100,100);
+        List<Asteroid> asteroids = new ArrayList<>();
+        Random random = new Random();
+        for (int i=0; i<5; i++) {
+            asteroids.add(new Asteroid(random.nextInt(100), random.nextInt(100)));
+        }
+
         Scene scene = new Scene(pane);
-        pane.getChildren().addAll(ship.getCharacter(), asteroid.getCharacter());
+        pane.getChildren().add(ship.getCharacter());
+        for (Asteroid ast: asteroids) {
+            pane.getChildren().add(ast.getCharacter());
+        }
         // map of keyboard key statuses
         Map<KeyCode, Boolean> keyBoard = new HashMap<>();
         scene.setOnKeyPressed(event->keyBoard.put(event.getCode(), true));
@@ -42,10 +50,13 @@ public class AsteroidsApplication extends Application {
                     ship.accelerate();
                 }
                 ship.move();
-                asteroid.move();
-                if (asteroid.collide(ship)) {
-                    stop();
-                }
+                asteroids.forEach(ast->ast.move());
+                asteroids.forEach(ast -> {
+                    if (ast.collide(ship)) {
+                        stop();
+                    }
+                });
+
             }
         }.start();
         asteroid.turnRight();
