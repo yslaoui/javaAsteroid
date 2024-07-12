@@ -14,16 +14,19 @@ import java.util.*;
 
 public class AsteroidsApplication extends Application {
 
+    public static int WIDTH = 600;
+    public static int HEIGHT = 400;
+
     @Override
     public void start(Stage window) throws Exception {
         Pane pane = new Pane();
-        pane.setPrefSize(600,400);
-        Ship ship = new Ship(200,200);
-        Asteroid asteroid = new Asteroid(100,100);
+        pane.setPrefSize(WIDTH,HEIGHT);
+        Ship ship = new Ship(WIDTH/3,HEIGHT/2);
         List<Asteroid> asteroids = new ArrayList<>();
+        List<Projectile> projectiles = new ArrayList<>();
         Random random = new Random();
         for (int i=0; i<5; i++) {
-            asteroids.add(new Asteroid(random.nextInt(100), random.nextInt(100)));
+            asteroids.add(new Asteroid(random.nextInt(WIDTH/3), random.nextInt(HEIGHT)));
         }
 
         Scene scene = new Scene(pane);
@@ -49,6 +52,19 @@ public class AsteroidsApplication extends Application {
                 if (keyBoard.getOrDefault(KeyCode.UP, false)) {
                     ship.accelerate();
                 }
+                if (keyBoard.getOrDefault(KeyCode.SPACE, false)) {
+                    Projectile projectile = new Projectile(ship.getCharacter().getTranslateX(),
+                                        ship.getCharacter().getTranslateY());
+                    projectile.getCharacter().setRotate(ship.getCharacter().getRotate());
+                    projectiles.add(projectile);
+                    for (int i=0; i<30; i++) {
+                        projectile.accelerate();
+                    }
+
+                    pane.getChildren().add(projectile.getCharacter());
+                }
+
+                // Movement
                 ship.move();
                 asteroids.forEach(ast->ast.move());
                 asteroids.forEach(ast -> {
@@ -56,13 +72,12 @@ public class AsteroidsApplication extends Application {
                         stop();
                     }
                 });
+                projectiles.forEach(proj->{
+                    proj.move();
+                });
 
             }
         }.start();
-        asteroid.turnRight();
-        asteroid.turnRight();
-        asteroid.accelerate();
-        asteroid.accelerate();
         window.setScene(scene);
         window.show();
     }

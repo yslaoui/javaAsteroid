@@ -36,10 +36,6 @@ public class Character {
         double sinDirection = Math.sin(Math.toRadians(this.character.getRotate()));
         this.movement = this.movement.add(cosDirection * 0.05, sinDirection* 0.05);
     }
-    public void move() {
-        this.character.setTranslateX(this.character.getTranslateX() + this.movement.getX());
-        this.character.setTranslateY(this.character.getTranslateY() + this.movement.getY());
-    }
 
     public boolean collide(Character other) {
         Shape intersection = Shape.intersect(this.character, other.getCharacter());
@@ -47,5 +43,28 @@ public class Character {
             return false;
         }
         return true;
+    }
+
+    public void move() {
+
+        this.character.setTranslateX(this.character.getTranslateX() + this.movement.getX());
+        this.character.setTranslateY(this.character.getTranslateY() + this.movement.getY());
+
+        if (this.character.getTranslateX() < 0) {
+            this.character.setTranslateX(AsteroidsApplication.WIDTH);
+        }
+
+        if (this.character.getTranslateX() > AsteroidsApplication.WIDTH) {
+            this.character.setTranslateX(0);
+        }
+
+        if (this.character.getTranslateY() < 0) {
+            this.character.setTranslateY(AsteroidsApplication.HEIGHT);
+        }
+
+        if (this.character.getTranslateY() > AsteroidsApplication.HEIGHT) {
+            this.character.setTranslateY(0);
+        }
+
     }
 }
