@@ -11,6 +11,7 @@ import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AsteroidsApplication extends Application {
 
@@ -39,8 +40,10 @@ public class AsteroidsApplication extends Application {
         scene.setOnKeyPressed(event->keyBoard.put(event.getCode(), true));
         scene.setOnKeyReleased(event->keyBoard.put(event.getCode(), false));
 
+
         // animation timer that rotates the ship based on the keyboard status hashmap
         new AnimationTimer() {
+            boolean spacePressed = false;
             @Override
             public void handle(long l) {
                 if (keyBoard.getOrDefault(KeyCode.RIGHT, false)) {
@@ -52,7 +55,7 @@ public class AsteroidsApplication extends Application {
                 if (keyBoard.getOrDefault(KeyCode.UP, false)) {
                     ship.accelerate();
                 }
-                if (keyBoard.getOrDefault(KeyCode.SPACE, false)) {
+                if (keyBoard.getOrDefault(KeyCode.SPACE, false) && !spacePressed) {
                     Projectile projectile = new Projectile(ship.getCharacter().getTranslateX(),
                                         ship.getCharacter().getTranslateY());
                     projectile.getCharacter().setRotate(ship.getCharacter().getRotate());
@@ -60,8 +63,11 @@ public class AsteroidsApplication extends Application {
                     for (int i=0; i<30; i++) {
                         projectile.accelerate();
                     }
-
                     pane.getChildren().add(projectile.getCharacter());
+                    spacePressed = true;
+                }
+                if (!keyBoard.getOrDefault(KeyCode.SPACE, false)) {
+                    spacePressed = false;
                 }
 
                 // Movement
@@ -75,6 +81,39 @@ public class AsteroidsApplication extends Application {
                 projectiles.forEach(proj->{
                     proj.move();
                 });
+
+                // Removing projectiles and asteroids when they collide
+                    // Setting alive attribute flag to false when for asteroids and projectiles when they collide
+                projectiles.forEach(proj->{
+                    asteroids.forEach(ast->{
+                        if (ast.collide(proj)) {
+                            proj.setAlive(false);
+                            ast.setAlive(false);
+                        }
+                    });
+                });
+                    // remove projectiles that are not alive from the pane
+                projectiles.forEach(proj->{
+                    if (!proj.getAlive()) {
+                        pane.getChildren().remove(proj.getCharacter());
+                    }
+                });
+                    // remove projectiles that are not alive from the projectiles list
+                projectiles.removeAll(projectiles
+                                    .stream()
+                                    .filter(proj->!proj.getAlive())
+                                    .collect(Collectors.toCollection(ArrayList::new)));
+                    // remove asteroids that are not alive from the pane
+                asteroids.forEach(ast->{
+                    if (!ast.getAlive()) {
+                        pane.getChildren().remove(ast.getCharacter());
+                    }
+                });
+                    // remove asteroids that are not alive from the asteroids list
+                projectiles.removeAll(projectiles
+                                    .stream()
+                                    .filter(proj->!proj.getAlive())
+                                    .collect(Collectors.toCollection(ArrayList::new)));
 
             }
         }.start();

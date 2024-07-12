@@ -25,5 +25,21 @@ public class Asteroid extends Character {
         super.move();
         double moveRotation = 0.5 - this.rnd.nextDouble();
         super.getCharacter().setRotate(super.getCharacter().getRotate() + moveRotation);
+
+        if (super.getCharacter().getTranslateX() < 0) {
+            super.getCharacter().setTranslateX(AsteroidsApplication.WIDTH);
+        }
+
+        if (super.getCharacter().getTranslateX() > AsteroidsApplication.WIDTH) {
+            super.getCharacter().setTranslateX(0);
+        }
+
+        if (super.getCharacter().getTranslateY() < 0) {
+            super.getCharacter().setTranslateY(AsteroidsApplication.HEIGHT);
+        }
+
+        if (super.getCharacter().getTranslateY() > AsteroidsApplication.HEIGHT) {
+            super.getCharacter().setTranslateY(0);
+        }
     }
 }
