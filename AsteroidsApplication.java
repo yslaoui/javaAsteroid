@@ -1,4 +1,4 @@
-package asteroid;
+package javaAsteroid;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -8,21 +8,26 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class AsteroidsApplication extends Application {
 
     public static int WIDTH = 600;
     public static int HEIGHT = 400;
+    public static AtomicInteger score;
 
     @Override
     public void start(Stage window) throws Exception {
+        score = new AtomicInteger(0);
         Pane pane = new Pane();
         pane.setPrefSize(WIDTH,HEIGHT);
         Ship ship = new Ship(WIDTH/3,HEIGHT/2);
+        Text scoreText = new Text(10,10,"Points: " + score.intValue());
         List<Asteroid> asteroids = new ArrayList<>();
         List<Projectile> projectiles = new ArrayList<>();
         Random random = new Random();
@@ -32,6 +37,7 @@ public class AsteroidsApplication extends Application {
 
         Scene scene = new Scene(pane);
         pane.getChildren().add(ship.getCharacter());
+        pane.getChildren().add(scoreText);
         for (Asteroid ast: asteroids) {
             pane.getChildren().add(ast.getCharacter());
         }
@@ -89,6 +95,7 @@ public class AsteroidsApplication extends Application {
                         if (ast.collide(proj)) {
                             proj.setAlive(false);
                             ast.setAlive(false);
+                            scoreText.setText(String.valueOf("Points: " + score.addAndGet(1000)));
                         }
                     });
                 });

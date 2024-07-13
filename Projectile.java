@@ -1,4 +1,4 @@
-package asteroid;
+package javaAsteroid;
 
 import javafx.scene.shape.Polygon;
 
