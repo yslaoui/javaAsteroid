@@ -31,9 +31,11 @@ public class AsteroidsApplication extends Application {
         List<Asteroid> asteroids = new ArrayList<>();
         List<Projectile> projectiles = new ArrayList<>();
         Random random = new Random();
+        // Initial set of asteroids
         for (int i=0; i<5; i++) {
             asteroids.add(new Asteroid(random.nextInt(WIDTH/3), random.nextInt(HEIGHT)));
         }
+
 
         Scene scene = new Scene(pane);
         pane.getChildren().add(ship.getCharacter());
@@ -117,10 +119,17 @@ public class AsteroidsApplication extends Application {
                     }
                 });
                     // remove asteroids that are not alive from the asteroids list
-                projectiles.removeAll(projectiles
+                asteroids.removeAll(asteroids
                                     .stream()
                                     .filter(proj->!proj.getAlive())
-                                    .collect(Collectors.toCollection(ArrayList::new)));
+                                    .collect(Collectors.toCollection(ArrayList::new)));// Adding new asteroids constinuously
+                // Adding asteroids continuously
+                Asteroid newAsteroid = new Asteroid(random.nextInt(WIDTH/3), random.nextInt(HEIGHT));
+                if (random.nextDouble() < 0.005 && !(ship.collide(newAsteroid))) {
+                    asteroids.add(newAsteroid);
+                    pane.getChildren().add(newAsteroid.getCharacter());
+                }
+
 
             }
         }.start();
